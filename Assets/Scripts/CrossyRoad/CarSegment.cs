@@ -4,46 +4,53 @@ using UnityEngine;
 
 public class CarSegment : BaseSegment
 {
-    [SerializeField] private List<GameObject> carsList;
-    [SerializeField] private List<GameObject> currentCars;
-
     [SerializeField] private Transform leftRespawn;
     [SerializeField] private Transform rightRespawn;
-    private Transform respawnPoint;
+    private Transform startPoint;
     private Transform endPoint;
 
+    [SerializeField] private float minCarSpeed;
+    [SerializeField] private float maxCarSpeed;
     private float carSpeed;
+
+ 
+    [SerializeField] private float minTimeToRespawn;
+    [SerializeField] private float maxTimeToRespawn;
     private float timeToRespawn;
+
+    [SerializeField] private List<GameObject> carsList;
+    [SerializeField] private List<GameObject> currentCars;
 
     public override void InitializeSegment()
     {
         base.InitializeSegment();
         ChooseRespawnSide();
-        RespawnNewCar();
-        carSpeed = Random.Range(1, 4);
-        timeToRespawn = Random.Range(2, 5);
+        carSpeed = Random.Range(minCarSpeed, maxCarSpeed);
+        timeToRespawn = Random.Range(minTimeToRespawn, maxTimeToRespawn);
+        StartCoroutine(RespawnNewCarWithDelay(timeToRespawn));
     }
 
     public void ChooseRespawnSide()
     {
         if (Random.Range(0, 101) < 50)
         {
-            respawnPoint = rightRespawn;
+            startPoint = rightRespawn;
             endPoint = leftRespawn;
         }
         else
         {
-            respawnPoint = leftRespawn;
+            startPoint = leftRespawn;
             endPoint = rightRespawn;
         }
     }
     public void RespawnNewCar()
     {
         GameObject newCar = Instantiate(carsList[Random.Range(0, carsList.Count)]);
-        newCar.transform.position = respawnPoint.position;
-        if (respawnPoint == rightRespawn)
+        newCar.transform.position = startPoint.position;
+        if (startPoint == rightRespawn)
         {
-            newCar.transform.Rotate(0, -180, 0);
+            newCar.transform.Rotate(0, 180, 0);
+
         }
         currentCars.Add(newCar);
 
@@ -54,7 +61,6 @@ public class CarSegment : BaseSegment
     {
         base.UpdateSegment();
         UpdateMovingCar();
-        CheckCarPosition();
     }
 
     public override void DeinitalizeSegment()
@@ -62,34 +68,28 @@ public class CarSegment : BaseSegment
         base.DeinitalizeSegment();
     }
 
-    public void DestroyCar(GameObject car)
-    {
-        currentCars.Remove(car);
-        Destroy(car.gameObject);
-
-    }
-
     public void UpdateMovingCar()
     {
         foreach (var car in currentCars)
         {
-            car.transform.Translate(Vector3.right * carSpeed * Time.deltaTime);
-        }
-    }
+            // Start moving car
+            car.transform?.Translate(Vector3.right * carSpeed * Time.deltaTime);
 
-    public void CheckCarPosition()
-    {
-        foreach (var car in currentCars)
-        {
-            Debug.Log($"Car transform {car.transform.position}");
-            Debug.Log($"End Point: {endPoint.transform.position}");
-            if (car.transform.position == endPoint.transform.position)
+            // Check that the car is at the ending point
+            if (car.transform.position.x >= endPoint.transform.position.x && startPoint == leftRespawn)
             {
-                Debug.Log($"Destroy {car.transform}");
                 DestroyCar(car.gameObject);
             }
-            
+            else if (car.transform.position.x <= endPoint.transform.position.x && startPoint == rightRespawn)
+            {
+                DestroyCar(car.gameObject);
+            }
         }
+    }
+    public void DestroyCar(GameObject car)
+    {
+        currentCars.Remove(car);
+        Destroy(car.gameObject);
     }
 
     private IEnumerator RespawnNewCarWithDelay(float delay)
@@ -97,9 +97,5 @@ public class CarSegment : BaseSegment
         yield return new WaitForSeconds(delay);
         RespawnNewCar();
     }
-
-
-    // Trzeba:
-    // ustalic punkt koncowy samochodu, po czym go zniszczyc
 }
 
