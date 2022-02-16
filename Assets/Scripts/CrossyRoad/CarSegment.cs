@@ -70,19 +70,19 @@ public class CarSegment : BaseSegment
 
     public void UpdateMovingCar()
     {
-        foreach (var car in currentCars)
+        for (int i = 0; i >= 0; i--)
         {
             // Start moving car
-            car.transform?.Translate(Vector3.right * carSpeed * Time.deltaTime);
+            currentCars[i].transform?.Translate(Vector3.right * carSpeed * Time.deltaTime);
 
             // Check that the car is at the ending point
-            if (car.transform.position.x >= endPoint.transform.position.x && startPoint == leftRespawn)
+            if (currentCars[i].transform.position.x >= endPoint.transform.position.x && startPoint == leftRespawn)
             {
-                DestroyCar(car.gameObject);
+                DestroyCar(currentCars[i].gameObject);
             }
-            else if (car.transform.position.x <= endPoint.transform.position.x && startPoint == rightRespawn)
+            else if (currentCars[i].transform.position.x <= endPoint.transform.position.x && startPoint == rightRespawn)
             {
-                DestroyCar(car.gameObject);
+                DestroyCar(currentCars[i].gameObject);
             }
         }
     }
