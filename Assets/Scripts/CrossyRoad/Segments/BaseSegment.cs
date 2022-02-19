@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BaseSegment : MonoBehaviour
 {
+    [SerializeField] private int segmentID;
+    public int SegmentID => segmentID;
+
     [SerializeField] protected List<Field> fields;
     [SerializeField] private bool testMode;
 
@@ -38,7 +41,7 @@ public class BaseSegment : MonoBehaviour
 
     }
 
-    //public bool CheckFieldIfAvailable(int index)
+    //public bool CheckFieldEnterable(int index)
     //{
     //    return fields[index];
     //}

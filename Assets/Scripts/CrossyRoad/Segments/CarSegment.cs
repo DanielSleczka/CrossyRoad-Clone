@@ -70,10 +70,10 @@ public class CarSegment : BaseSegment
 
     public void UpdateMovingCar()
     {
-        for (int i = 0; i >= 0; i--)
+        for (int i = currentCars.Count - 1; i >= 0; i--)
         {
             // Start moving car
-            currentCars[i].transform?.Translate(Vector3.right * carSpeed * Time.deltaTime);
+            currentCars[i].transform.Translate(Vector3.right * carSpeed * Time.deltaTime);
 
             // Check that the car is at the ending point
             if (currentCars[i].transform.position.x >= endPoint.transform.position.x && startPoint == leftRespawn)
