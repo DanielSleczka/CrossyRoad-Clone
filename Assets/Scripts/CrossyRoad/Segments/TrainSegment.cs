@@ -15,6 +15,9 @@ public class TrainSegment : BaseSegment
     private Transform startPoint;
     private Transform endPoint;
 
+    private bool isMoving;
+    private bool notMoving;
+
     public override void InitializeSegment()
     {
         base.InitializeSegment();
@@ -38,6 +41,7 @@ public class TrainSegment : BaseSegment
     }
     private void RespawnNewTrain()
     {
+        isMoving = true;
         GameObject newTrain = Instantiate(trainList[Random.Range(0, trainList.Count)]);
         newTrain.transform.position = startPoint.position;
         if (startPoint == leftRespawn)
@@ -45,36 +49,46 @@ public class TrainSegment : BaseSegment
             newTrain.transform.Rotate(0, 180, 0);
         }
         currentTrain.Add(newTrain);
-
-        StartCoroutine(RespawnNewTrainWithDelay(respawnTime));
-
     }
+    private IEnumerator RespawnNewTrainWithDelay(float delay)
+    {
+        notMoving = false;
+        yield return new WaitForSeconds(delay);
+        RespawnNewTrain();
+    }
+
     public override void UpdateSegment()
     {
         base.UpdateSegment();
         UpdateMovingTrain();
+        if (notMoving)
+        {
+            StartCoroutine(RespawnNewTrainWithDelay(respawnTime));
+        }
     }
 
     public void UpdateMovingTrain()
     {
-        foreach (var train in currentTrain)
+        for (int i = currentTrain.Count - 1; i >= 0; i--)
         {
             // Start moving train
-            train.transform.Translate(Vector3.left * trainSpeed * Time.deltaTime);
+            currentTrain[i].transform.Translate(Vector3.left * trainSpeed * Time.deltaTime);
 
             // Check that the train is at the ending point
-            if (train.transform.position.x >= endPoint.transform.position.x && startPoint == leftRespawn)
+            if (currentTrain[i].transform.position.x >= endPoint.transform.position.x && startPoint == leftRespawn)
             {
-                DestroyCar(train.gameObject);
+                DestroyTrain(currentTrain[i].gameObject);
             }
-            else if (train.transform.position.x <= endPoint.transform.position.x && startPoint == rightRespawn)
+            else if (currentTrain[i].transform.position.x <= endPoint.transform.position.x && startPoint == rightRespawn)
             {
-                DestroyCar(train.gameObject);
+                DestroyTrain(currentTrain[i].gameObject);
             }
         }
     }
-    public void DestroyCar(GameObject train)
+    public void DestroyTrain(GameObject train)
     {
+        isMoving = false;
+        notMoving = true;
         currentTrain.Remove(train);
         Destroy(train.gameObject);
     }
@@ -84,11 +98,7 @@ public class TrainSegment : BaseSegment
         base.DeinitalizeSegment();
     }
 
-    private IEnumerator RespawnNewTrainWithDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        RespawnNewTrain();
-    }
+
 
 }
 
