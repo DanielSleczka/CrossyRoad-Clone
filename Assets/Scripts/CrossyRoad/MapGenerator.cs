@@ -11,7 +11,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Start()
     {
-        startPosition = new Vector3(0, 0, 3);
+        startPosition = new Vector3(0, 0, 5);
     }
 
     private void Update()
