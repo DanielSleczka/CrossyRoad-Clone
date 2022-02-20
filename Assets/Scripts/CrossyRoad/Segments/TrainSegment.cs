@@ -41,14 +41,15 @@ public class TrainSegment : BaseSegment
     }
     private void RespawnNewTrain()
     {
-        isMoving = true;
         GameObject newTrain = Instantiate(trainList[Random.Range(0, trainList.Count)]);
+        newTrain.transform.SetParent(transform);
         newTrain.transform.position = startPoint.position;
         if (startPoint == leftRespawn)
         {
             newTrain.transform.Rotate(0, 180, 0);
         }
         currentTrain.Add(newTrain);
+        isMoving = true;
     }
     private IEnumerator RespawnNewTrainWithDelay(float delay)
     {

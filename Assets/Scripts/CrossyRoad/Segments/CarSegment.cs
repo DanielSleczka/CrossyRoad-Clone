@@ -26,7 +26,7 @@ public class CarSegment : BaseSegment
         base.InitializeSegment();
         ChooseRespawnSide();
         carSpeed = Random.Range(minCarSpeed, maxCarSpeed);
-        timeToRespawn = Random.Range(minTimeToRespawn, maxTimeToRespawn);
+        SetupRespawnTime();
         StartCoroutine(RespawnNewCarWithDelay(timeToRespawn));
     }
 
@@ -46,14 +46,14 @@ public class CarSegment : BaseSegment
     public void RespawnNewCar()
     {
         GameObject newCar = Instantiate(carsList[Random.Range(0, carsList.Count)]);
+        newCar.transform.SetParent(transform);
         newCar.transform.position = startPoint.position;
         if (startPoint == rightRespawn)
         {
             newCar.transform.Rotate(0, 180, 0);
-
         }
         currentCars.Add(newCar);
-
+        SetupRespawnTime();
         StartCoroutine(RespawnNewCarWithDelay(timeToRespawn));
     }
 
@@ -86,6 +86,12 @@ public class CarSegment : BaseSegment
             }
         }
     }
+
+    private void SetupRespawnTime()
+    {
+        timeToRespawn = Random.Range(minTimeToRespawn, maxTimeToRespawn);
+    }
+
     public void DestroyCar(GameObject car)
     {
         currentCars.Remove(car);

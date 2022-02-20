@@ -41,8 +41,15 @@ public class BaseSegment : MonoBehaviour
 
     }
 
-    //public bool CheckFieldEnterable(int index)
-    //{
-    //    return fields[index];
-    //}
+    public void SetID(int value)
+    {
+        segmentID = value;
+    }
+
+    public bool CheckFieldEnterable(int index, out Vector3 position)
+    {
+        bool canEnter = fields[index].CanEnter;
+        position = canEnter ? fields[index].transform.position : Vector3.zero;
+        return canEnter;
+    }
 }
