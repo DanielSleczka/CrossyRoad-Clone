@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,33 +6,47 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float playerSpeed;
-    [SerializeField] private Transform movePoint;
+    [SerializeField] private Transform player;
 
+    [SerializeField] private MapGenerator mapGenerator;
+
+    private Vector3 targetPosition;
 
     private void Start()
     {
-        movePoint.parent = null;
+        targetPosition = player.position;
     }
-
 
     private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, movePoint.position, playerSpeed * Time.deltaTime);
-
-        Debug.Log(transform.position);
-
-        if (Vector3.Distance(transform.position, movePoint.position) <= 0.05f)
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
-            {
-                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-            }
-
-            else if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
-            {
-                movePoint.position += new Vector3(0f, 0f, Input.GetAxisRaw("Vertical"));
-            }
+            mapGenerator.TryMove(1, 0, OnMovenmentSuccess, OnMovementFailed);
         }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            mapGenerator.TryMove(-1, 0, OnMovenmentSuccess, OnMovementFailed);
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            mapGenerator.TryMove(0, -1, OnMovenmentSuccess, OnMovementFailed);
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            mapGenerator.TryMove(0, 1, OnMovenmentSuccess, OnMovementFailed);
+        }
+
+        player.position = Vector3.Lerp(player.position, targetPosition, playerSpeed * Time.deltaTime);
+
     }
 
+    private void OnMovementFailed()
+    {
+        Debug.Log("Failed");
+    }
+
+    private void OnMovenmentSuccess(Vector3 targetPosition)
+    {
+        this.targetPosition = targetPosition;
+    }
 }
