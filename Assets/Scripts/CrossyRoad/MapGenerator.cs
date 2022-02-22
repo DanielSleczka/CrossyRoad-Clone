@@ -6,20 +6,21 @@ using UnityEngine.Events;
 public class MapGenerator : MonoBehaviour
 {
     [SerializeField] private List<BaseSegment> segmentsList;
-    [SerializeField] private List<BaseSegment> currentSegments;
     [SerializeField] private RestSegment restSegment;
+    [SerializeField] private List<BaseSegment> currentSegmentsList;
 
-    private Vector3 startPosition;
+    [SerializeField] [Min(20)] private float maxRangeOfExistSegments;
+
+    private Vector3 newSegmentPosition;
+    private int segmentIndexValue = 0;
 
     public int currentSegment;
     public int currentField;
 
 
-    private int indexValue = 0;
-
     public void TryMove(int segmentDiff, int fieldDiff, UnityAction<Vector3> OnMovenmentSuccess, UnityAction OnMovementFailed)
     {
-        BaseSegment segment = currentSegments.Find(c => c.SegmentID == currentSegment + segmentDiff);
+        BaseSegment segment = currentSegmentsList.Find(c => c.SegmentID == currentSegment + segmentDiff);
 
         if (segment != null)
         {
@@ -28,13 +29,14 @@ public class MapGenerator : MonoBehaviour
                 currentSegment += segmentDiff;
                 currentField += fieldDiff;
                 OnMovenmentSuccess?.Invoke(position);
+                if (segmentDiff == 1)
+                    GenerateNewSegment();
             }
             else
                 OnMovementFailed?.Invoke();
         }
     }
     
-
     private void Start()
     {
         GenerateStartMap();
@@ -42,50 +44,49 @@ public class MapGenerator : MonoBehaviour
 
     private void Update()
     {
-        GenerateNewSegment();
-        startPosition = new Vector3(0, 0, indexValue);
+        if (currentSegmentsList.Count > maxRangeOfExistSegments)
+        {
+            RemoveLastSegment();
+        }
     }
 
     public void GenerateStartMap()
     {
-        for(int i = indexValue; i < 2; i++)
+        for(int i = segmentIndexValue; i < 2; i++)
         {
             RestSegment newRestSegment = Instantiate(restSegment);
             newRestSegment.transform.position = new Vector3(0, 0, i);
             newRestSegment.SetID(i);
             newRestSegment.SetRandomChance(1f);
-            currentSegments.Add(newRestSegment);
-            indexValue++;
+            currentSegmentsList.Add(newRestSegment);
+            segmentIndexValue++;
         }
 
-        for (int i = indexValue; i < 8; i++)
+        for (int i = segmentIndexValue; i <= 15; i++)
         {
             BaseSegment newSegment = Instantiate(segmentsList[Random.Range(0, segmentsList.Count)]);
             newSegment.transform.position = new Vector3(0, 0, i);
             newSegment.SetID(i);
-            currentSegments.Add(newSegment);
-            indexValue++;
+            currentSegmentsList.Add(newSegment);
+            segmentIndexValue++;
         }
     }
 
     public void GenerateNewSegment()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            BaseSegment newSegment = Instantiate(segmentsList[Random.Range(0, segmentsList.Count)]);
-            newSegment.transform.position = startPosition;
-            newSegment.SetID(indexValue);
-            currentSegments.Add(newSegment);
-            indexValue++;
-            startPosition.z++;
-        }
+        newSegmentPosition = new Vector3(0, 0, segmentIndexValue);
+        BaseSegment newSegment = Instantiate(segmentsList[Random.Range(0, segmentsList.Count)]);
+        newSegment.transform.position = newSegmentPosition;
+        newSegment.SetID(segmentIndexValue);
+        currentSegmentsList.Add(newSegment);
+        segmentIndexValue++;
     }   
    
     public void RemoveLastSegment()
     {
-
+        currentSegmentsList.Remove(currentSegmentsList[0]);
+        Destroy(currentSegmentsList[0].gameObject);
     }
-
 
     private void OnApplicationQuit()
     {

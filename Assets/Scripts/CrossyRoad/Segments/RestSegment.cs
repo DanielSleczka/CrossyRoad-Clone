@@ -7,6 +7,8 @@ public class RestSegment : BaseSegment
     [SerializeField] [Range(0f, 1f)] private float randomChance;
     [SerializeField] private List<GameObject> propsList;
 
+    private float maxValueFieldsWithProps = 4;
+    private float currentValueFieldsWithProps = 0;
 
     public override void InitializeSegment()
     {
@@ -20,7 +22,10 @@ public class RestSegment : BaseSegment
                 newProp.transform.position = field.transform.position;
                 newProp.transform.SetParent(field.transform);
                 field.SetCanEnter(false);
+                currentValueFieldsWithProps++;
             }
+            if (currentValueFieldsWithProps == maxValueFieldsWithProps)
+                break;
         }
     }
 

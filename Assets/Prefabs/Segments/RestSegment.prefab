@@ -958,7 +958,7 @@ MonoBehaviour:
   - {fileID: 3399010162350572529}
   - {fileID: 3399010162610371388}
   testMode: 1
-  randomChance: 0.4
+  randomChance: 0.6
   propsList:
   - {fileID: 3330352274329936017, guid: e1290601ce272594383be3238ec55d96, type: 3}
   - {fileID: 6311969121963465584, guid: 4bb56fac796aab042b08e00b9a1bd846, type: 3}

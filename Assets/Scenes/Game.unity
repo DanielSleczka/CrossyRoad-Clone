@@ -613,6 +613,7 @@ GameObject:
   - component: {fileID: 164322418}
   - component: {fileID: 164322417}
   - component: {fileID: 164322416}
+  - component: {fileID: 164322419}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -655,7 +656,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1.5
+  orthographic size: 1.7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -678,13 +679,28 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 164322415}
-  m_LocalRotation: {x: 0.21410716, y: -0.3722652, z: 0.08868608, w: 0.8987277}
-  m_LocalPosition: {x: 6.347, y: 4.54, z: -2.593}
+  m_LocalRotation: {x: 0.22385131, y: -0.25177288, z: 0.059980765, w: 0.9396294}
+  m_LocalPosition: {x: 4.43, y: 4.54, z: -3.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 26.8, y: -45, z: 0}
+  m_LocalEulerAnglesHint: {x: 26.8, y: -30, z: 0}
+--- !u!114 &164322419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164322415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be2c4b97bb1b1146ba434d97d08c3d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraSpeed: 3
+  player: {fileID: 543450652033555367}
+  distanceDiff: {x: 2.5, y: 3, z: -3}
 --- !u!1 &309171914
 GameObject:
   m_ObjectHideFlags: 0
@@ -2099,9 +2115,11 @@ MonoBehaviour:
   segmentsList:
   - {fileID: 3399010162657793536, guid: 9fdc48d89bdfdf94eaa05ae0f768ed46, type: 3}
   - {fileID: 2672897400576737515, guid: 4dc97c33eeb4e854abf8d5da04a0e803, type: 3}
-  - {fileID: 4693738612630608713, guid: 00762967f082c6d48bbfc58da1425893, type: 3}
+  - {fileID: 3575311864623761151, guid: 00762967f082c6d48bbfc58da1425893, type: 3}
   restSegment: {fileID: 3399010162657793536, guid: 9fdc48d89bdfdf94eaa05ae0f768ed46, type: 3}
-  currentSegment: 1
+  currentSegmentsList: []
+  maxRangeOfExistSegments: 31
+  currentSegment: 0
   currentField: 4
 --- !u!1 &2112854518
 GameObject:
