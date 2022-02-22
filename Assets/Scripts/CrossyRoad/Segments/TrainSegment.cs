@@ -1,29 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TrainSegment : BaseSegment
 {
     [SerializeField] private List<GameObject> trainList;
     [SerializeField] private List<GameObject> currentTrain;
 
-    [SerializeField] private float trainSpeed;
-    [SerializeField] private float respawnTime;
+    [SerializeField] private float minTrainSpeed;
+    [SerializeField] private float maxTrainSpeed;
+    private float trainSpeed;
+
+    [SerializeField] private float minTimeToRespawn;
+    [SerializeField] private float maxTimeToRespawn;
+    private float respawnTime;
 
     [SerializeField] private Transform rightRespawn;
     [SerializeField] private Transform leftRespawn;
     private Transform startPoint;
     private Transform endPoint;
 
-    private bool isMoving;
+    [SerializeField] private TrainLight trainLight;
+
     private bool notMoving;
+
 
     public override void InitializeSegment()
     {
         base.InitializeSegment();
         ChooseRespawnSide();
-        trainSpeed = Random.Range(5, 7);
-        respawnTime = Random.Range(7, 10);
+        trainSpeed = Random.Range(minTrainSpeed, maxTrainSpeed);
+        respawnTime = Random.Range(minTimeToRespawn, maxTimeToRespawn);
         StartCoroutine(RespawnNewTrainWithDelay(respawnTime));
     }
     public void ChooseRespawnSide()
@@ -49,8 +57,9 @@ public class TrainSegment : BaseSegment
             newTrain.transform.Rotate(0, 180, 0);
         }
         currentTrain.Add(newTrain);
-        isMoving = true;
+        trainLight.ActiveLights();
     }
+
     private IEnumerator RespawnNewTrainWithDelay(float delay)
     {
         notMoving = false;
@@ -88,7 +97,7 @@ public class TrainSegment : BaseSegment
     }
     public void DestroyTrain(GameObject train)
     {
-        isMoving = false;
+        trainLight.DeactiveLights();
         notMoving = true;
         currentTrain.Remove(train);
         Destroy(train.gameObject);
