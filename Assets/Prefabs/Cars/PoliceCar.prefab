@@ -93,9 +93,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2445970077797706045}
+  - component: {fileID: 3492248434201737210}
+  - component: {fileID: 8516636154989145086}
   m_Layer: 0
   m_Name: PoliceCar
-  m_TagString: Untagged
+  m_TagString: Vehicle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,6 +117,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3492248434201737210
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2445970077797706044}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5245948, y: 0.65651506, z: 0.76580596}
+  m_Center: {x: 0.0031225681, y: 0.3309944, z: -0.0015612841}
+--- !u!114 &8516636154989145086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2445970077797706044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aaa551ccb888c448a4501d56eaea1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3041383842634344953
 GameObject:
   m_ObjectHideFlags: 0

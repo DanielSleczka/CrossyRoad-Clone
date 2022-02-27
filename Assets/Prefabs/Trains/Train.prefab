@@ -9,9 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 432600616628831702}
+  - component: {fileID: 6210814002771471715}
+  - component: {fileID: 5496685643783506638}
   m_Layer: 0
   m_Name: Train
-  m_TagString: Untagged
+  m_TagString: Vehicle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34,6 +36,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6210814002771471715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432600616628831703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aaa551ccb888c448a4501d56eaea1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &5496685643783506638
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432600616628831703}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.6041183, y: 0.8453071, z: 0.721553}
+  m_Center: {x: 0.115688324, y: 0.47610998, z: -0.0017187893}
 --- !u!1 &775056920466473323
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,7 +186,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1794597244185805971}
   serializedVersion: 7
   lengthInSec: 2
-  simulationSpeed: 3
+  simulationSpeed: 4
   stopAction: 0
   cullingMode: 3
   ringBufferMode: 0
