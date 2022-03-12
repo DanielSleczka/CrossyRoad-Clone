@@ -5,8 +5,6 @@ using UnityEngine;
 public class ScoreSystem : MonoBehaviour
 {
     [SerializeField] private GameView gameView;
-    [SerializeField] private LoseView loseView;
-    [SerializeField] private Transform player;
 
     public int currentPoints = 0;
     public int positionBased = 0;

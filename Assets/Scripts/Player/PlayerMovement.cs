@@ -5,15 +5,24 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float playerSpeed;
+    [Header("Player Movement")]
     [SerializeField] private Transform player;
-
-    [SerializeField] private MapGenerator mapGenerator;
+    [SerializeField] private float duration;
     [SerializeField] private Animator animator;
 
+    [Header("Player Jump")]
+    [SerializeField] private Transform jumpbody;
+    [SerializeField] private AnimationCurve jumpCurve;
+    [SerializeField] private float jumpHeight;
+    //[SerializeField] [Range(0f, 1f)] private float jumpProgress;
+
+    [Header("Systems")]
+    [SerializeField] private MapGenerator mapGenerator;
     [SerializeField] private GameController controller;
 
+    private Vector3 startPosition;
     private Vector3 targetPosition;
+    private float startTime;
 
     private bool isGameStateRunning = false;
     public bool canMove = true;
@@ -27,18 +36,7 @@ public class PlayerMovement : MonoBehaviour
     public void UpdatePlayerMovement()
     {
         HandleInputs();
-
-        float distance = Vector3.Distance(targetPosition, player.position);
-        if (distance < 0.1f && !canMove)
-        {
-            canMove = true;
-        }
-        player.position = Vector3.Lerp(player.position, targetPosition, playerSpeed * Time.deltaTime);
-
-        // Rotate player toward to target position
-        Vector3 relativePos = targetPosition - transform.position;
-        Quaternion rotation = Quaternion.LookRotation(relativePos, Vector3.up);
-        transform.rotation = rotation;
+        HandleMovement();
     }
 
     public void HandleInputs()
@@ -47,58 +45,79 @@ public class PlayerMovement : MonoBehaviour
             return;
         if (Input.GetKeyDown(KeyCode.W))
         {
-            animator.SetTrigger("PlayerJump");
+            player.rotation = Quaternion.LookRotation(Vector3.forward);
+            animator.SetTrigger("isJumping");
             mapGenerator.TryMove(1, 0, OnMovenmentSuccess, OnMovementFailed);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            animator.SetTrigger("PlayerJump");
+            player.rotation = Quaternion.LookRotation(Vector3.back);
+            animator.SetTrigger("isJumping");
             mapGenerator.TryMove(-1, 0, OnMovenmentSuccess, OnMovementFailed);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            animator.SetTrigger("PlayerJump");
+            player.rotation = Quaternion.LookRotation(Vector3.left);
+            animator.SetTrigger("isJumping");
             mapGenerator.TryMove(0, -1, OnMovenmentSuccess, OnMovementFailed);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            animator.SetTrigger("PlayerJump");
+            player.rotation = Quaternion.LookRotation(Vector3.right);
+            animator.SetTrigger("isJumping");
             mapGenerator.TryMove(0, 1, OnMovenmentSuccess, OnMovementFailed);
         }
     }
 
-    private void OnMovementFailed()
+    private void HandleMovement()
     {
-        Debug.Log("Failed");
+        //Movement by time progress
+        float timeProgress = (Time.time - startTime) / duration;
+        transform.position = Vector3.Lerp(startPosition, targetPosition, timeProgress);
+
+        if (timeProgress >= 1f)
+        {
+            canMove = true;
+            animator.SetTrigger("isIdle");
+        }
+
+        // Player jump
+        jumpbody.transform.localPosition = Vector3.Lerp(Vector3.zero, Vector3.up * jumpHeight, jumpCurve.Evaluate(timeProgress));
     }
 
     private void OnMovenmentSuccess(Vector3 targetPosition)
     {
+        startPosition = transform.position;
+        startTime = Time.time;
         this.targetPosition = targetPosition;
         canMove = false;
     }
+    private void OnMovementFailed()
+    {
+        
+    }
 
-    private void OnCollisionEnter(Collision vehicle)
+    private void OnTriggerEnter(Collider vehicle)
     {
         if (vehicle.gameObject.CompareTag("Vehicle"))
         {
             Debug.Log("You Died! GAME OVER");
             player.GetComponent<Collider>().enabled = false;
             player.GetComponent<PlayerMovement>().enabled = false;
+            jumpbody.GetComponent<Animator>().enabled = false;
 
             Vector3 eulerRotation = player.rotation.eulerAngles;
             eulerRotation.x -= 90;
             player.rotation = Quaternion.Euler(eulerRotation);
 
-            player.localScale = new Vector3(1.5f, 1f, 0.2f);
+            player.localScale = new Vector3(2f, 1f, 0.2f);
 
-            player.localPosition += new Vector3(0f, 0.05f, 0.4f);
+            player.localPosition += new Vector3(0f, 0.05f, 0f);
 
             isGameStateRunning = false;
             controller.LoseState();
         }
     }
-
     public bool isAlive()
     {
         return isGameStateRunning;

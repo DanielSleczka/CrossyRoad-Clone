@@ -24,7 +24,6 @@ public class LoseView : BaseView
         scoreValue.text = $"{points}";
     }
     
-
     public void OnResetButtonClicked_AddListener(UnityAction listener)
     {
         resetButton.onClick.AddListener(listener);

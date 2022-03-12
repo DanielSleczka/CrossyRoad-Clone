@@ -21,6 +21,8 @@ public class GameController : MonoBehaviour
 
         loseView.OnResetButtonClicked_AddListener(RestartGameState);
         loseView.OnExitButtonClicked_AddListener(Application.Quit);
+
+        Time.timeScale = 1f;
     }
 
     private void Update()
