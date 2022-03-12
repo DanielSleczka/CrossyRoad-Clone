@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class TrainLight : MonoBehaviour
 {
-
-    [SerializeField] private List<Material> materials;
-
-    [SerializeField] private MeshRenderer rightLight;
-    [SerializeField] private MeshRenderer leftLight;
+    [SerializeField] private Light rightLight;
+    [SerializeField] private Light leftLight;
 
     public void ActiveLights()
     {
@@ -22,18 +19,20 @@ public class TrainLight : MonoBehaviour
     }
     public void IdleLights()
     {
-        rightLight.material = materials[0];
-        leftLight.material = materials[0];
+        rightLight.GetComponent<Light>().enabled = false;
+        leftLight.GetComponent<Light>().enabled = false;
     }
 
     private IEnumerator LightAnimation()
     {
-        rightLight.material = materials[0];
-        leftLight.material = materials[1];
+        rightLight.GetComponent<Light>().enabled = false;
+        leftLight.GetComponent<Light>().enabled = true;
         yield return new WaitForSeconds(0.5f);
-        rightLight.material = materials[1];
-        leftLight.material = materials[0];
+
+        rightLight.GetComponent<Light>().enabled = true;
+        leftLight.GetComponent<Light>().enabled = false;
         yield return new WaitForSeconds(0.5f);
+
         ActiveLights();
     }
 }
